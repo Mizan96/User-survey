@@ -16,19 +16,21 @@ class Question(models.Model):
         return f'{self.question} {self.question_type}'
     
 class Options(models.Model):
-    question = models.ForeignKey(Question, verbose_name="Question Name", on_delete=models.CASCADE)
-    Options = models.CharField(max_length=100)
+    question = models.ForeignKey(Question, related_name="options", on_delete=models.CASCADE)
+    option_name = models.CharField(max_length=100)
 
     def __str__(self) -> str:
-        return f'{self.question.question} {self.Options}'
+        return f'{self.question}-{self.option_name}'
     
 
 class CustomerFeedback(models.Model):
     question = models.ManyToManyField(Question)
 
 
+
 class CustomerResponse(models.Model):
     feedback = models.ForeignKey(CustomerFeedback, on_delete=models.CASCADE)
-    Question = models.ForeignKey(Question, on_delete=models.CASCADE)
+    question = models.ForeignKey(Question, on_delete=models.CASCADE)
     response_text = models.TextField(null=True, blank=True)
     selected_options = models.ManyToManyField(Options, blank=True)
+
